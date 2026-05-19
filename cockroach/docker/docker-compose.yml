@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  cockroach1:
+    image: cockroachdb/cockroach:latest-v24.1
+    container_name: cockroach1
+    hostname: cockroach1
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    volumes:
+      - cockroach-data1:/cockroach/cockroach-data
+    command: >
+      start --insecure --join=cockroach1,cockroach2,cockroach3
+      --listen-addr=cockroach1:26257
+      --http-addr=cockroach1:8080
+      --advertise-addr=cockroach1:26257
+    networks:
+      - cockroach-net
+
+  cockroach2:
+    image: cockroachdb/cockroach:latest-v24.1
+    container_name: cockroach2
+    hostname: cockroach2
+    ports:
+      - "26258:26257"
+      - "8081:8080"
+    volumes:
+      - cockroach-data2:/cockroach/cockroach-data
+    command: >
+      start --insecure --join=cockroach1,cockroach2,cockroach3
+      --listen-addr=cockroach2:26257
+      --http-addr=cockroach2:8080
+      --advertise-addr=cockroach2:26257
+    networks:
+      - cockroach-net
+
+  cockroach3:
+    image: cockroachdb/cockroach:latest-v24.1
+    container_name: cockroach3
+    hostname: cockroach3
+    ports:
+      - "26259:26257"
+      - "8082:8080"
+    volumes:
+      - cockroach-data3:/cockroach/cockroach-data
+    command: >
+      start --insecure --join=cockroach1,cockroach2,cockroach3
+      --listen-addr=cockroach3:26257
+      --http-addr=cockroach3:8080
+      --advertise-addr=cockroach3:26257
+    networks:
+      - cockroach-net
+
+volumes:
+  cockroach-data1:
+  cockroach-data2:
+  cockroach-data3:
+
+networks:
+  cockroach-net:
+    driver: bridge
