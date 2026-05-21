@@ -15,6 +15,11 @@ services:
       --listen-addr=cockroach1:26257
       --http-addr=cockroach1:8080
       --advertise-addr=cockroach1:26257
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 2G
     networks:
       - cockroach-net
 
@@ -32,6 +37,11 @@ services:
       --listen-addr=cockroach2:26257
       --http-addr=cockroach2:8080
       --advertise-addr=cockroach2:26257
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 2G
     networks:
       - cockroach-net
 
@@ -49,6 +59,11 @@ services:
       --listen-addr=cockroach3:26257
       --http-addr=cockroach3:8080
       --advertise-addr=cockroach3:26257
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 2G
     networks:
       - cockroach-net
 

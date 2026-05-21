@@ -1,0 +1,51 @@
+Initializing 20 connections...
+Initializing 0 idle connections...
+Initializing 100 workers and preparing statements...
+_elapsed___errors__ops/sec(inst)___ops/sec(cum)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)
+    1.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    1.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    1.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    1.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    1.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel
+    2.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    2.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    2.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    2.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    2.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel
+    3.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    3.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    3.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    3.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    3.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel
+    4.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    4.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    4.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    4.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    4.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel
+_elapsed___errors__ops/sec(inst)___ops/sec(cum)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)
+    5.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    5.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    5.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    5.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    5.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel
+    6.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    6.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    6.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    6.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    6.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel
+    7.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    7.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    7.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    7.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    7.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel
+    8.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    8.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    8.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    8.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    8.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel
+_elapsed___errors__ops/sec(inst)___ops/sec(cum)__p50(ms)__p95(ms)__p99(ms)_pMax(ms)
+    9.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 delivery
+    9.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 newOrder
+    9.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 orderStatus
+    9.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 payment
+    9.0s        0            0.0            0.0      0.0      0.0      0.0      0.0 stockLevel

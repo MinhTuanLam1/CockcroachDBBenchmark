@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# Chaos testing script: Kills a CockroachDB node to measure cluster recovery time
+# Usage: ./chaos-kill.sh [node_name]
+# Default: kills cockroach3, runs 50-warehouse workload for 6 minutes
+# WARNING: Use only in test/dev environments - may cause data loss in production
 set -euo pipefail
 
 NODE="${1:-cockroach3}"
@@ -8,7 +12,8 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 OUTFILE="$OUTDIR/chaos_${NODE}_${TIMESTAMP}.log"
 
 echo "[INFO] Starting background workload before killing $NODE..."
-cockroach workload run tpcc \
+# Run workload inside Docker container (no local cockroach CLI needed)
+docker exec cockroach1 ./cockroach workload run tpcc \
   --warehouses 50 --duration 6m --ramp 30s --tolerate-errors \
   "postgresql://root@cockroach1:26257?sslmode=disable" > "$OUTFILE" 2>&1 &
 WORKLOAD_PID=$!
@@ -21,6 +26,7 @@ docker kill "$NODE"
 echo "[INFO] Waiting for recovery..."
 sleep 30
 
+# Poll until all ranges have full replication (3 replicas)
 for i in {1..60}; do
   UNDER=$(docker exec cockroach1 ./cockroach sql --insecure --host=cockroach1:26257 --format=csv -e "SELECT count(*) FROM crdb_internal.ranges WHERE array_length(replicas,1) < 3;" | tail -n 1 || true)
   if [ "$UNDER" = "0" ] || [ -z "$UNDER" ]; then
