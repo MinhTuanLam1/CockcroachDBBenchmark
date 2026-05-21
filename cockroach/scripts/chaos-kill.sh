@@ -14,7 +14,7 @@ OUTFILE="$OUTDIR/chaos_${NODE}_${TIMESTAMP}.log"
 echo "[INFO] Starting background workload before killing $NODE..."
 # Run workload inside Docker container (no local cockroach CLI needed)
 docker exec cockroach1 ./cockroach workload run tpcc \
-  --warehouses 50 --duration 6m --ramp 30s --tolerate-errors \
+  --warehouses 5 --duration 6m --ramp 30s --tolerate-errors \
   "postgresql://root@cockroach1:26257?sslmode=disable" > "$OUTFILE" 2>&1 &
 WORKLOAD_PID=$!
 sleep 45
