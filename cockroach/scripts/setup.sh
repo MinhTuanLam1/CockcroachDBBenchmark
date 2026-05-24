@@ -1,28 +1,33 @@
 #!/usr/bin/env bash
-# Setup script: Starts CockroachDB cluster via Docker and initializes Raft quorum
+# Setup script: Starts CockroachDB cluster via Docker and initializes TPC-C schema
 set -euo pipefail
 
-# Ensure Homebrew binaries are in PATH
+SCRIPT_DIR="$(dirname "$0")"
+# shellcheck source=benchmark-config.env
+source "$SCRIPT_DIR/benchmark-config.env"
+
 export PATH="$HOME/homebrew/bin:$PATH"
 
-cd "$(dirname "$0")/../docker"
+cd "$SCRIPT_DIR/../docker"
 
-echo "[1/4] Stopping and removing existing containers + volumes (clean slate)..."
+echo "[1/6] Stopping and removing existing containers + volumes (clean slate)..."
 docker-compose down -v 2>/dev/null || true
 
-echo "[2/4] Starting fresh containers..."
+echo "[2/6] Starting fresh containers (8 vCPU / 32GB RAM profile)..."
 docker-compose up -d
 
-echo "[3/4] Waiting for nodes to be ready..."
-sleep 5
+echo "[3/6] Waiting for nodes to be ready..."
+sleep 10
 
-echo "[4/4] Initializing cluster (Raft quorum)..."
+echo "[4/6] Initializing cluster (Raft quorum)..."
 docker exec cockroach1 ./cockroach init --insecure --host=cockroach1:26257
 
-echo "[5/5] Cluster nodes:"
+echo "[5/6] Cluster nodes:"
 docker exec cockroach1 ./cockroach node ls --insecure --host=cockroach1:26257
 
-echo "[6/6] Initializing TPC-C database (10 warehouses)..."
-docker exec cockroach1 ./cockroach workload init tpcc --warehouses 5 "postgresql://root@cockroach1:26257?sslmode=disable"
+echo "[6/6] Initializing TPC-C database (${BENCHMARK_WAREHOUSES} warehouses)..."
+docker exec cockroach1 ./cockroach workload init tpcc \
+  --warehouses "$BENCHMARK_WAREHOUSES" \
+  "$DB_URL"
 
-echo "Done. Admin UI available at http://localhost:8080"
+echo "Done. Admin UI: http://localhost:8080"

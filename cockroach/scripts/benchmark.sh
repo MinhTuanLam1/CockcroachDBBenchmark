@@ -1,28 +1,38 @@
 #!/usr/bin/env bash
 # Benchmark script: Runs TPC-C workload against CockroachDB cluster (inside Docker)
-# Usage: ./benchmark.sh [warehouses] [duration] [ramp]
-# Defaults: 10 warehouses, 3m duration, 30s ramp
+# Usage: ./benchmark.sh [warehouses] [max_ops] [ramp] [concurrency]
+# Defaults: from benchmark-config.env (10 wh, 10000 ops, 30s ramp, 100 concurrency)
 set -euo pipefail
 
-WAREHOUSES="${1:-5}"
-DURATION="${2:-3m}"
-RAMP="${3:-30s}"
-OUTDIR="$(dirname "$0")/../results/raw"
+SCRIPT_DIR="$(dirname "$0")"
+# shellcheck source=benchmark-config.env
+source "$SCRIPT_DIR/benchmark-config.env"
+
+WAREHOUSES="${1:-$BENCHMARK_WAREHOUSES}"
+MAX_OPS="${2:-$BENCHMARK_MAX_OPS}"
+RAMP="${3:-$BENCHMARK_RAMP}"
+CONCURRENCY="${4:-$BENCHMARK_CONCURRENCY}"
+OUTDIR="$SCRIPT_DIR/../results/raw"
 mkdir -p "$OUTDIR"
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-OUTFILE="$OUTDIR/tpcc_${WAREHOUSES}wh_${TIMESTAMP}.log"
+OUTFILE="$OUTDIR/tpcc_${WAREHOUSES}wh_${MAX_OPS}ops_${TIMESTAMP}.log"
 
-echo "[INFO] Running TPC-C: warehouses=$WAREHOUSES, duration=$DURATION, ramp=$RAMP"
+echo "[INFO] Running TPC-C: warehouses=$WAREHOUSES, max-ops=$MAX_OPS, ramp=$RAMP, concurrency=$CONCURRENCY"
 echo "[INFO] Output: $OUTFILE"
 
-# Run workload inside Docker container (no local cockroach CLI needed)
 docker exec cockroach1 ./cockroach workload run tpcc \
   --warehouses "$WAREHOUSES" \
-  --duration "$DURATION" \
+  --max-ops "$MAX_OPS" \
   --ramp "$RAMP" \
+  --concurrency "$CONCURRENCY" \
   --tolerate-errors \
-  "postgresql://root@cockroach1:26257?sslmode=disable" \
+  "$DB_URL" \
   | tee "$OUTFILE"
+
+echo "[INFO] Running consistency check..."
+docker exec cockroach1 ./cockroach workload check tpcc \
+  --warehouses "$WAREHOUSES" \
+  "$DB_URL"
 
 echo "[INFO] Benchmark complete. Results saved to $OUTFILE"
