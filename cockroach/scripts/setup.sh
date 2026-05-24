@@ -2,19 +2,26 @@
 # Setup script: Starts CockroachDB cluster via Docker and initializes TPC-C schema
 set -euo pipefail
 
-SCRIPT_DIR="$(dirname "$0")"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source=benchmark-config.env
 source "$SCRIPT_DIR/benchmark-config.env"
+# shellcheck source=lib.sh
+source "$SCRIPT_DIR/lib.sh"
 
-export PATH="$HOME/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/homebrew/bin:$PATH"
+
+COMPOSE=$(docker_compose_cmd) || {
+  echo "[ERROR] Docker Compose not found. Run: ./install-and-run.sh"
+  exit 1
+}
 
 cd "$SCRIPT_DIR/../docker"
 
 echo "[1/6] Stopping and removing existing containers + volumes (clean slate)..."
-docker-compose down -v 2>/dev/null || true
+$COMPOSE down -v 2>/dev/null || true
 
 echo "[2/6] Starting fresh containers (8 vCPU / 32GB RAM profile)..."
-docker-compose up -d
+$COMPOSE up -d
 
 echo "[3/6] Waiting for nodes to be ready..."
 sleep 10
