@@ -75,25 +75,10 @@ install_docker_mac() {
   open -a Docker
 }
 
-install_docker_linux() {
-  if command -v docker &>/dev/null && docker compose version &>/dev/null 2>&1; then
-    log "Docker + Compose already installed."
-    return 0
-  fi
-  log "Installing Docker Engine + Compose plugin (requires sudo)..."
-  sudo apt-get update -qq
-  sudo apt-get install -y docker.io docker-compose-plugin
-  sudo systemctl enable --now docker 2>/dev/null || true
-  if ! groups "$USER" | grep -q docker; then
-    sudo usermod -aG docker "$USER" 2>/dev/null || true
-    log "Added $USER to docker group. If docker permission fails, run: newgrp docker"
-  fi
-}
-
 install_docker() {
   case "$(uname -s)" in
     Darwin) install_docker_mac ;;
-    Linux) install_docker_linux ;;
+    Linux) install_docker_linux ;;  # from lib.sh
     *)
       err "Unsupported OS: $(uname -s). Install Docker manually, then re-run with --skip-install."
       exit 1
@@ -113,8 +98,7 @@ ensure_docker_compose() {
       brew install docker-compose
       ;;
     Linux)
-      err "Docker Compose plugin missing. Run: sudo apt-get install -y docker-compose-plugin"
-      exit 1
+      install_docker_compose_linux_standalone
       ;;
   esac
 }
