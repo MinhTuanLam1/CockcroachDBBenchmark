@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Chaos testing script: Kills a CockroachDB node to measure cluster recovery time
 # Usage: ./chaos-kill.sh [node_name]
-# Default: kills cockroach3, runs TPC-C in background until max-ops reached
+# Default: kills cockroach3, runs TPC-C in background until duration reached
 # WARNING: Use only in test/dev environments
 set -euo pipefail
 
@@ -16,7 +16,7 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 OUTFILE="$OUTDIR/chaos_${NODE}_${TIMESTAMP}.log"
 
 echo "[INFO] Starting background workload before killing $NODE..."
-echo "[INFO] Workload: warehouses=$CHAOS_WAREHOUSES, max-ops=$CHAOS_MAX_OPS, ramp=$CHAOS_RAMP, concurrency=$CHAOS_CONCURRENCY"
+echo "[INFO] Workload: warehouses=$CHAOS_WAREHOUSES, duration=$CHAOS_DURATION, ramp=$CHAOS_RAMP, concurrency=$CHAOS_CONCURRENCY"
 
 WAIT_FLAG=""
 if [ "${CHAOS_WAIT:-}" = "true" ]; then
@@ -25,7 +25,7 @@ fi
 
 docker exec cockroach1 ./cockroach workload run tpcc \
   --warehouses "$CHAOS_WAREHOUSES" \
-  --max-ops "$CHAOS_MAX_OPS" \
+  --duration "$CHAOS_DURATION" \
   --ramp "$CHAOS_RAMP" \
   --concurrency "$CHAOS_CONCURRENCY" \
   --tolerate-errors \

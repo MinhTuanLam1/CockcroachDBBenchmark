@@ -22,7 +22,7 @@
 |---|---------------------|-----------------|
 | Số node | **3** | **3** (Replica Set) |
 | Vai trò | Raft quorum | Primary + 2 Secondary |
-| Tool benchmark | `cockroach workload tpcc` | py-tpcc hoặc OLTPBench |
+| Tool benchmark | `cockroach workload tpcc` | py-tpcc |
 
 ---
 
@@ -30,29 +30,30 @@
 
 | Param | Giá trị | Giải thích |
 |-------|---------|------------|
-| **Warehouses** | **10** | Quy mô dataset (phase 1); scale 50, 100 sau |
-| **Stop condition** | **max-ops = 10,000** | Dừng sau 10.000 operations (không dùng duration) |
+| **Warehouses** | **10** | Quy mô dataset |
+| **Measurement interval** | **20 minutes** | Thời gian đo chuẩn |
 | **Ramp (warmup)** | **30s** | Khởi động dần, **không tính** vào metric |
 | **Concurrency** | **100** | 10 workers × warehouses (TPC-C chuẩn) |
 | **Runs per config** | **3 lần** | Lấy **median** |
-| **Init trước mỗi scale** | Có | `init tpcc --warehouses N` |
+| **Thinking time** | **Enabled** | `--wait=1` hoặc tương đương |
+| **Stop condition** | **Duration-based** | Không dùng max-ops |
 
 ### Ví dụ lệnh CockroachDB
 
 ```bash
 ./cockroach/scripts/setup.sh
 ./cockroach/scripts/benchmark.sh
-# hoặc: ./benchmark.sh 10 10000 30s 100
+# hoặc: ./benchmark.sh 10 20m 30s 100
 ```
 
 ### Ví dụ tương đương MongoDB (py-tpcc)
 
 ```bash
-# Thống nhất: 10 warehouses, 10000 transactions, 100 terminals, 30s warmup
-python tpcc.py --warehouses 10 --terminals 100 --runTxns 10000 --warmup 30
+# Thống nhất: 10 warehouses, 100 clients, 20 minutes, 30s warmup
+python tpcc.py --warehouses 10 --terminals 100 --duration 1200 --warmup 30
 ```
 
-*(Điều chỉnh flag theo tool thực tế — giữ đúng 4 số: 10 / 10000 / 30s / 100)*
+*(Duration = 1200 giây = 20 phút)*
 
 ---
 
@@ -69,8 +70,9 @@ python tpcc.py --warehouses 10 --terminals 100 --runTxns 10000 --warmup 30
 
 | Case | Config | Mục đích |
 |------|--------|----------|
-| A — Speed | `w: 1`, `j: false` | Tốc độ tối đa |
-| B — Safety | `w: "majority"`, `j: true` | Nhất quán cao |
+| Case 1 (Speed) | `w: 1`, `j: false` | Tốc độ tối đa |
+| Case 2 (Safety) | `w: "majority"`, `j: true` | Nhất quán cao |
+| Case 2b (Safety + ACID) | `w: "majority"`, `j: true` + multi-doc txn | ACID tương đương NewSQL |
 
 ---
 
@@ -81,10 +83,9 @@ Mỗi run, mỗi team điền:
 | Metric | Mô tả |
 |--------|-------|
 | **tpmC** | NewOrder transactions / phút |
-| **p50 / p95 / p99 latency (ms)** | Theo txn type nếu có (NewOrder, Payment…) |
+| **p50 / p95 / p99 latency (ms)** | Theo txn type nếu có (NewOrder, Payment...) |
 | **Total errors** | Số lỗi trong run |
-| **Success rate** | `(max_ops - errors) / max_ops × 100%` |
-| **Elapsed time (s)** | Thời gian hoàn thành 10.000 ops |
+| **Success rate** | `(ops_completed - errors) / ops_completed × 100%` |
 | **Retries** (CRDB) | Serialization retry count |
 | **Balance drift** (Mongo) | Nếu không dùng multi-doc transaction |
 
@@ -96,7 +97,7 @@ Mỗi run, mỗi team điền:
 |-------|---------|
 | Kill | **1 node** |
 | Timing | Sau **45s** warmup, workload đang chạy |
-| Workload lúc chaos | TPC-C, 10 warehouses, max-ops 20.000 |
+| Workload lúc chaos | TPC-C, 10 warehouses, duration 20 minutes |
 | Đo | Recovery time, success rate lúc fault, downtime |
 
 | Metric | CockroachDB | MongoDB |
@@ -109,7 +110,7 @@ Mỗi run, mỗi team điền:
 
 ## 7. Bảng kết quả (điền sau khi chạy)
 
-### Performance — 10 warehouses, max-ops 10.000, concurrency 100
+### Performance — 10 warehouses, 20 minutes, concurrency 100
 
 | Run | tpmC (CRDB) | p99 ms (CRDB) | tpmC (Mongo) | p99 ms (Mongo) | Errors (CRDB) | Errors (Mongo) |
 |-----|-------------|---------------|--------------|----------------|---------------|----------------|
@@ -126,6 +127,7 @@ Mỗi run, mỗi team điền:
 | CRDB 3-node | | |
 | Mongo w:1 | | — |
 | Mongo w:majority + j:true | | |
+| Mongo w:majority + j:true + multi-doc txn | | |
 
 ### Fault tolerance
 
@@ -143,11 +145,11 @@ Mỗi run, mỗi team điền:
 Hardware : 8 vCPU, 32GB RAM
 Workload : TPC-C
 Warehouses: 10
-Stop     : max-ops 10,000 (no duration)
+Duration : 20 minutes measurement
 Ramp     : 30s warmup
 Concurrency: 100
 Runs     : 3, report median
-Metrics  : tpmC, p50/p95/p99, errors, elapsed time
+Metrics  : tpmC, p50/p95/p99, errors
 Chaos    : kill 1 node after 45s warmup
 ```
 

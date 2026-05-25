@@ -118,13 +118,13 @@ PYTPCC_DB=tpcc
 
 # Benchmark params — MUST match CockroachDB team
 BENCHMARK_WAREHOUSES=10
-BENCHMARK_MAX_OPS=10000
+BENCHMARK_DURATION=1200
 BENCHMARK_RAMPUP=30
 BENCHMARK_CLIENTS=100
 
 # Chaos test params
 CHAOS_WAREHOUSES=10
-CHAOS_MAX_OPS=20000
+CHAOS_DURATION=1200
 CHAOS_RAMPUP=30
 CHAOS_CLIENTS=100
 CHAOS_WARMUP_SEC=45
@@ -145,8 +145,9 @@ cd mongodb/py-tpcc
 python tpcc.py --driver=mongodb \
   --host=mongo1 \
   --warehouses=10 \
-  --max_ops=10000 \
-  --clients=100 \
+  --terminals=100 \
+  --duration=1200 \
+  --warmup=30 \
   --mongodb-write-concern="{w: 1, j: false}" \
   --no-load
 ```
@@ -157,8 +158,9 @@ python tpcc.py --driver=mongodb \
 python tpcc.py --driver=mongodb \
   --host=mongo1 \
   --warehouses=10 \
-  --max_ops=10000 \
-  --clients=100 \
+  --terminals=100 \
+  --duration=1200 \
+  --warmup=30 \
   --mongodb-write-concern="{w: 'majority', j: true}" \
   --no-load
 ```
@@ -169,8 +171,9 @@ python tpcc.py --driver=mongodb \
 python tpcc.py --driver=mongodb \
   --host=mongo1 \
   --warehouses=10 \
-  --max_ops=10000 \
-  --clients=100 \
+  --terminals=100 \
+  --duration=1200 \
+  --warmup=30 \
   --mongodb-write-concern="{w: 'majority', j: true}" \
   --enable-mongodb-transactions \
   --no-load
@@ -188,8 +191,9 @@ cd mongodb/py-tpcc
 python tpcc.py --driver=mongodb \
   --host=mongo1 \
   --warehouses=10 \
-  --max_ops=20000 \
-  --clients=100 \
+  --terminals=100 \
+  --duration=1200 \
+  --warmup=30 \
   --mongodb-write-concern="{w: 'majority', j: true}" \
   --no-load > chaos.log 2>&1 &
 

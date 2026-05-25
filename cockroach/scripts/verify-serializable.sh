@@ -14,10 +14,10 @@ OUTFILE="$OUTDIR/serializable_verify_${TIMESTAMP}.log"
 echo "[INFO] Resetting CockroachDB SQL statement statistics..."
 docker exec cockroach1 ./cockroach sql --insecure --host=cockroach1:26257 -e "SELECT crdb_internal.reset_sql_stats();"
 
-echo "[INFO] Running high-contention TPC-C (10 warehouses, 100 concurrency, 10k ops)..."
+echo "[INFO] Running high-contention TPC-C (10 warehouses, 100 concurrency, 10 min)..."
 docker exec cockroach1 ./cockroach workload run tpcc \
   --warehouses 10 \
-  --max-ops 10000 \
+  --duration 10m \
   --ramp 10s \
   --concurrency 100 \
   --tolerate-errors \
