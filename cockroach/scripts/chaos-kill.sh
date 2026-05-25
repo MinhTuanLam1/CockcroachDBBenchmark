@@ -20,7 +20,7 @@ echo "[INFO] Workload: warehouses=$CHAOS_WAREHOUSES, max-ops=$CHAOS_MAX_OPS, ram
 
 WAIT_FLAG=""
 if [ "${CHAOS_WAIT:-}" = "true" ]; then
-  WAIT_FLAG="--wait"
+  WAIT_FLAG="--wait=1"
 fi
 
 docker exec cockroach1 ./cockroach workload run tpcc \

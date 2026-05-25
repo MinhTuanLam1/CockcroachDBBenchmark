@@ -22,7 +22,7 @@ echo "[INFO] Output: $OUTFILE"
 
 WAIT_FLAG=""
 if [ "${BENCHMARK_WAIT:-}" = "true" ]; then
-  WAIT_FLAG="--wait"
+  WAIT_FLAG="--wait=1"
 fi
 
 docker exec cockroach1 ./cockroach workload run tpcc \
