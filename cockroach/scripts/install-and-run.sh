@@ -2,7 +2,7 @@
 # Full pipeline: install Docker + Compose, setup 3-node cluster, run TPC-C benchmark
 #
 # Usage:
-#   ./install-and-run.sh              # install (if needed) + setup + 3 benchmark runs
+#   ./install-and-run.sh              # install + setup + 3 benchmark runs
 #   ./install-and-run.sh --skip-install
 #   ./install-and-run.sh --setup-only
 #   ./install-and-run.sh --benchmark-only
@@ -104,7 +104,7 @@ ensure_docker_compose() {
 }
 
 run_benchmarks() {
-  log "Running TPC-C benchmark ${RUNS} time(s): warehouses=$BENCHMARK_WAREHOUSES max-ops=$BENCHMARK_MAX_OPS concurrency=$BENCHMARK_CONCURRENCY"
+  log "Running TPC-C benchmark ${RUNS} time(s): warehouses=$BENCHMARK_WAREHOUSES duration=$BENCHMARK_DURATION concurrency=$BENCHMARK_CONCURRENCY"
   for i in $(seq 1 "$RUNS"); do
     log "=== Benchmark run ${i}/${RUNS} ==="
     "$SCRIPT_DIR/benchmark.sh"
@@ -114,7 +114,7 @@ run_benchmarks() {
 
 main() {
   log "AdvancedDB CockroachDB — install & run"
-  log "Target: ${BENCHMARK_WAREHOUSES} warehouses, max-ops=${BENCHMARK_MAX_OPS}, concurrency=${BENCHMARK_CONCURRENCY}"
+  log "Target: ${BENCHMARK_WAREHOUSES} warehouses, duration=${BENCHMARK_DURATION}, concurrency=${BENCHMARK_CONCURRENCY}"
 
   if [[ "$BENCHMARK_ONLY" == false && "$SKIP_INSTALL" == false ]]; then
     install_docker
@@ -146,6 +146,12 @@ main() {
   log "  Admin UI : http://localhost:8080"
   log "  Results  : cockroach/results/raw/"
   log "  Protocol : shared/benchmark-protocol.md"
+  log "  Extra ACID scripts:"
+  log "    ./verify-serializable.sh  — prove SERIALIZABLE with retry counts"
+  log "    ./run-baseline-1node.sh   — 1-node baseline for Raft overhead %"
+  log "    ./verify-post-chaos.sh    — verify data after node kill"
+  log "    ./run-scale-decay.sh      — throughput decay 10→50→100→500 wh"
+  log "    ./count-roundtrip.sh      — network round-trip analysis"
 }
 
 main "$@"

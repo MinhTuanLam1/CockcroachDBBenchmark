@@ -5,9 +5,9 @@
 # WARNING: Use only in test/dev environments
 set -euo pipefail
 
-SCRIPT_DIR="$(dirname "$0")"
-# shellcheck source=benchmark-config.env
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/benchmark-config.env"
+source "$SCRIPT_DIR/lib.sh"
 
 NODE="${1:-$CHAOS_NODE}"
 OUTDIR="$SCRIPT_DIR/../results/raw"
@@ -17,14 +17,22 @@ OUTFILE="$OUTDIR/chaos_${NODE}_${TIMESTAMP}.log"
 
 echo "[INFO] Starting background workload before killing $NODE..."
 echo "[INFO] Workload: warehouses=$CHAOS_WAREHOUSES, max-ops=$CHAOS_MAX_OPS, ramp=$CHAOS_RAMP, concurrency=$CHAOS_CONCURRENCY"
+
+WAIT_FLAG=""
+if [ "${CHAOS_WAIT:-}" = "true" ]; then
+  WAIT_FLAG="--wait"
+fi
+
 docker exec cockroach1 ./cockroach workload run tpcc \
   --warehouses "$CHAOS_WAREHOUSES" \
   --max-ops "$CHAOS_MAX_OPS" \
   --ramp "$CHAOS_RAMP" \
   --concurrency "$CHAOS_CONCURRENCY" \
   --tolerate-errors \
+  $WAIT_FLAG \
   "$DB_URL" > "$OUTFILE" 2>&1 &
 WORKLOAD_PID=$!
+
 sleep "$CHAOS_WARMUP_SEC"
 
 echo "[INFO] Killing $NODE at $(date +%s)"

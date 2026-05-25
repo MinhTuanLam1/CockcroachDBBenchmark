@@ -20,7 +20,7 @@ cd "$SCRIPT_DIR/../docker"
 echo "[1/6] Stopping and removing existing containers + volumes (clean slate)..."
 $COMPOSE down -v 2>/dev/null || true
 
-echo "[2/6] Starting fresh containers (8 vCPU / 32GB RAM profile)..."
+echo "[2/6] Starting fresh containers..."
 $COMPOSE up -d
 
 echo "[3/6] Waiting for nodes to be ready..."

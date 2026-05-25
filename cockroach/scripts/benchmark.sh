@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # Benchmark script: Runs TPC-C workload against CockroachDB cluster (inside Docker)
 # Usage: ./benchmark.sh [warehouses] [max_ops] [ramp] [concurrency]
-# Defaults: from benchmark-config.env (10 wh, 10000 ops, 30s ramp, 100 concurrency)
+# Defaults: from benchmark-config.env
 set -euo pipefail
 
-SCRIPT_DIR="$(dirname "$0")"
-# shellcheck source=benchmark-config.env
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "$SCRIPT_DIR/benchmark-config.env"
 
 WAREHOUSES="${1:-$BENCHMARK_WAREHOUSES}"
@@ -21,12 +20,18 @@ OUTFILE="$OUTDIR/tpcc_${WAREHOUSES}wh_${MAX_OPS}ops_${TIMESTAMP}.log"
 echo "[INFO] Running TPC-C: warehouses=$WAREHOUSES, max-ops=$MAX_OPS, ramp=$RAMP, concurrency=$CONCURRENCY"
 echo "[INFO] Output: $OUTFILE"
 
+WAIT_FLAG=""
+if [ "${BENCHMARK_WAIT:-}" = "true" ]; then
+  WAIT_FLAG="--wait"
+fi
+
 docker exec cockroach1 ./cockroach workload run tpcc \
   --warehouses "$WAREHOUSES" \
   --max-ops "$MAX_OPS" \
   --ramp "$RAMP" \
   --concurrency "$CONCURRENCY" \
   --tolerate-errors \
+  $WAIT_FLAG \
   "$DB_URL" \
   | tee "$OUTFILE"
 
