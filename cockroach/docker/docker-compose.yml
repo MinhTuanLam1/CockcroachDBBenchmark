@@ -1,7 +1,6 @@
 version: '3.8'
 
-# Hardware target: 8 vCPU, 32GB RAM host
-# Allocation: ~2.5 vCPU + 8GB RAM per node (3 nodes ≈ 7.5 vCPU, 24GB)
+# Hardware target: 8 vCPU, 32GB RAM host (no per-node limits — CockroachDB uses available resources)
 
 services:
   cockroach1:
@@ -20,11 +19,6 @@ services:
       --advertise-addr=cockroach1:26257
       --cache=2GB
       --max-sql-memory=6GB
-    deploy:
-      resources:
-        limits:
-          cpus: '2.50'
-          memory: 8G
     networks:
       - cockroach-net
 
@@ -44,11 +38,6 @@ services:
       --advertise-addr=cockroach2:26257
       --cache=2GB
       --max-sql-memory=6GB
-    deploy:
-      resources:
-        limits:
-          cpus: '2.50'
-          memory: 8G
     networks:
       - cockroach-net
 
@@ -68,11 +57,6 @@ services:
       --advertise-addr=cockroach3:26257
       --cache=2GB
       --max-sql-memory=6GB
-    deploy:
-      resources:
-        limits:
-          cpus: '2.50'
-          memory: 8G
     networks:
       - cockroach-net
 
