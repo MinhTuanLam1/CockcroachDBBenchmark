@@ -10,13 +10,17 @@ SESSION="tpcc-overnight"
 RESULTS_DIR="$SCRIPT_DIR/../results/raw"
 mkdir -p "$RESULTS_DIR"
 
+# Ensure run-pipeline.sh is executable
+chmod +x "$SCRIPT_DIR/run-pipeline.sh"
+
 # Kill existing session if any
 tmux kill-session -t "$SESSION" 2>/dev/null || true
 
 echo "[INFO] Creating tmux session: $SESSION"
 
-# Launch tmux running the real pipeline script
-tmux new-session -d -s "$SESSION" "bash '$SCRIPT_DIR/run-pipeline.sh'"
+# Create empty session, then send the command (works on all tmux versions)
+tmux new-session -d -s "$SESSION"
+tmux send-keys -t "$SESSION" "cd '$SCRIPT_DIR' && bash ./run-pipeline.sh" C-m
 
 echo ""
 echo "========================================"
