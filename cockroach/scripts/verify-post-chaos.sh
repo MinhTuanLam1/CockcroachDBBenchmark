@@ -33,7 +33,7 @@ echo ""
 echo "[INFO] 4/4 Checking for recent serialization errors / retries..."
 docker exec cockroach1 ./cockroach sql --insecure --host=cockroach1:26257 --format=csv -e "
 SELECT
-  sum(retries) AS total_retries_since_reset,
+  sum(COALESCE((statistics->>'cnt')::INT,0) - COALESCE((statistics->>'firstAttemptCnt')::INT,0)) AS total_retries_since_reset,
   count(*) AS total_statements
 FROM crdb_internal.node_statement_statistics;
 "

@@ -36,9 +36,9 @@ SELECT
     ELSE 'other'
   END AS txn_type,
   count(*) AS stmt_count,
-  sum(retries) AS total_retries,
-  round(avg(retries)::DECIMAL, 2) AS avg_retries,
-  max(retries) AS max_retries
+  sum(COALESCE((statistics->>'cnt')::INT,0) - COALESCE((statistics->>'firstAttemptCnt')::INT,0)) AS total_retries,
+  round(avg(COALESCE((statistics->>'cnt')::INT,0) - COALESCE((statistics->>'firstAttemptCnt')::INT,0))::DECIMAL, 2) AS avg_retries,
+  max(COALESCE((statistics->>'maxRetries')::INT,0)) AS max_retries
 FROM crdb_internal.node_statement_statistics
 GROUP BY txn_type
 ORDER BY total_retries DESC;
