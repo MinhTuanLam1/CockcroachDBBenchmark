@@ -6,3 +6,4 @@ cockroach3
 [RESULT] Node cockroach3 killed. Recovery time: 31s
 cockroach3
 [INFO] Node cockroach3 restarted.
+[INFO] Workload complete. Output: /root/CockcroachDBBenchmark/cockroach/scripts/../results/raw/chaos_cockroach3_20260526_122724.log
