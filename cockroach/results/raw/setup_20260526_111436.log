@@ -1,0 +1,43 @@
+[1/6] Stopping and removing existing containers + volumes (clean slate)...
+[2/6] Starting fresh containers...
+time="2026-05-26T11:14:47Z" level=warning msg="/root/CockcroachDBBenchmark/cockroach/docker/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Network docker_cockroach-net Creating 
+ Network docker_cockroach-net Created 
+ Volume docker_cockroach-data3 Creating 
+ Volume docker_cockroach-data3 Created 
+ Volume docker_cockroach-data1 Creating 
+ Volume docker_cockroach-data1 Created 
+ Volume docker_cockroach-data2 Creating 
+ Volume docker_cockroach-data2 Created 
+ Container cockroach2 Creating 
+ Container cockroach3 Creating 
+ Container cockroach1 Creating 
+ Container cockroach1 Created 
+ Container cockroach2 Created 
+ Container cockroach3 Created 
+ Container cockroach2 Starting 
+ Container cockroach1 Starting 
+ Container cockroach3 Starting 
+ Container cockroach2 Started 
+ Container cockroach3 Started 
+ Container cockroach1 Started 
+[3/6] Waiting for nodes to be ready...
+[4/6] Initializing cluster (Raft quorum)...
+Cluster successfully initialized
+[5/6] Cluster nodes:
+id
+1
+[6/6] Initializing TPC-C database (10 warehouses)...
+I260526 11:14:58.594389 1 workload/cli/run.go:636  [-] 1  random seed: 3341457644081587814
+I260526 11:14:58.601508 1 ccl/workloadccl/fixture.go:312  [-] 2  starting import of 9 tables
+I260526 11:14:59.547003 39 ccl/workloadccl/fixture.go:489  [-] 3  imported 11 KiB in district table (100 rows, 0 index entries, took 918.166291ms, 0.01 MiB/s)
+I260526 11:14:59.549485 44 ccl/workloadccl/fixture.go:489  [-] 4  imported 8.7 MiB in item table (100000 rows, 0 index entries, took 920.657253ms, 9.48 MiB/s)
+I260526 11:14:59.566884 38 ccl/workloadccl/fixture.go:489  [-] 5  imported 613 B in warehouse table (10 rows, 0 index entries, took 938.030911ms, 0.00 MiB/s)
+I260526 11:15:00.691493 43 ccl/workloadccl/fixture.go:489  [-] 6  imported 2.0 MiB in new_order table (90000 rows, 0 index entries, took 2.062697355s, 0.96 MiB/s)
+I260526 11:15:01.143302 41 ccl/workloadccl/fixture.go:489  [-] 7  imported 24 MiB in history table (300000 rows, 0 index entries, took 2.514523625s, 9.58 MiB/s)
+I260526 11:15:01.146861 42 ccl/workloadccl/fixture.go:489  [-] 8  imported 21 MiB in order table (300000 rows, 300000 index entries, took 2.518050896s, 8.24 MiB/s)
+I260526 11:15:02.062646 40 ccl/workloadccl/fixture.go:489  [-] 9  imported 181 MiB in customer table (300000 rows, 300000 index entries, took 3.433779258s, 52.65 MiB/s)
+I260526 11:15:02.241932 45 ccl/workloadccl/fixture.go:489  [-] 10  imported 315 MiB in stock table (1000000 rows, 0 index entries, took 3.613064951s, 87.30 MiB/s)
+I260526 11:15:03.524248 46 ccl/workloadccl/fixture.go:489  [-] 11  imported 194 MiB in order_line table (3000102 rows, 0 index entries, took 4.89548501s, 39.52 MiB/s)
+I260526 11:15:03.524467 1 ccl/workloadccl/fixture.go:320  [-] 12  imported 745 MiB bytes in 9 tables (took 4.922854904s, 151.38 MiB/s)
+Done. Admin UI: http://localhost:8080

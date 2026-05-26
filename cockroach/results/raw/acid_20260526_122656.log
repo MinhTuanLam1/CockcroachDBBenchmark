@@ -39,4 +39,4 @@ DROP TABLE
 ========================================
 [RESULT] ALL ACID TESTS PASSED
 ========================================
-Output: /root/CockcroachDBBenchmark/cockroach/scripts/../results/raw/acid_verify_20260526_093011.log
+Output: /root/CockcroachDBBenchmark/cockroach/scripts/../results/raw/acid_verify_20260526_122656.log
