@@ -1,0 +1,28 @@
+[INFO] === Post-chaos data verification ===
+[INFO] 1/4 Checking all ranges are fully replicated...
+[PASS] All ranges fully replicated (3/3 nodes).
+
+[INFO] 2/4 Running TPC-C consistency check...
+I260526 09:51:06.915307 1 workload/tpcc/tpcc.go:511  [-] 1  check 3.3.2.1 took 3.273035ms
+I260526 09:51:07.056168 1 workload/tpcc/tpcc.go:511  [-] 2  check 3.3.2.2 took 140.81398ms
+I260526 09:51:07.088148 1 workload/tpcc/tpcc.go:511  [-] 3  check 3.3.2.3 took 31.939845ms
+I260526 09:51:08.312803 1 workload/tpcc/tpcc.go:511  [-] 4  check 3.3.2.4 took 1.224629781s
+I260526 09:51:08.696328 1 workload/tpcc/tpcc.go:511  [-] 5  check 3.3.2.5 took 383.481673ms
+I260526 09:51:09.838897 1 workload/tpcc/tpcc.go:511  [-] 6  check 3.3.2.7 took 1.142525389s
+I260526 09:51:09.983266 1 workload/tpcc/tpcc.go:511  [-] 7  check 3.3.2.8 took 144.329556ms
+I260526 09:51:10.133697 1 workload/tpcc/tpcc.go:511  [-] 8  check 3.3.2.9 took 150.397762ms
+
+[INFO] 3/4 Sampling warehouse YTD balances (first 5 rows)...
+w_id,w_name,w_ytd
+0,7,3081330.85
+1,7,3269796.45
+2,9,3204217.35
+3,10,3210520.93
+4,9,3230057.06
+
+[INFO] 4/4 Checking for recent serialization errors / retries...
+total_retries_since_reset,total_statements
+0,944
+
+[INFO] Post-chaos verification complete.
+  If consistency check passes and balances look correct, data survived the fault.

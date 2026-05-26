@@ -1,0 +1,9 @@
+[INFO] Starting background workload before killing cockroach3...
+[INFO] Workload: warehouses=10, duration=20m, ramp=30s, concurrency=100
+[INFO] Killing cockroach3 at 1779787881
+cockroach3
+[INFO] Waiting for recovery...
+[RESULT] Node cockroach3 killed. Recovery time: 30s
+cockroach3
+[INFO] Node cockroach3 restarted.
+[INFO] Workload complete. Output: /root/CockcroachDBBenchmark/cockroach/scripts/../results/raw/chaos_cockroach3_20260526_093036.log
