@@ -26,6 +26,7 @@ echo "" | tee -a "$OUTFILE"
 echo "[TEST A/3] Atomicity: Transaction all-or-nothing" | tee -a "$OUTFILE"
 
 docker exec cockroach1 ./cockroach sql --insecure --host=cockroach1:26257 -e "
+CREATE DATABASE IF NOT EXISTS acid_test;
 DROP TABLE IF EXISTS acid_test.atomic_accounts;
 CREATE TABLE acid_test.atomic_accounts (
   id INT PRIMARY KEY,
