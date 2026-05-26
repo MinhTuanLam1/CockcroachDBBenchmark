@@ -22,12 +22,17 @@ for i in 1 2 3; do
   ./benchmark.sh 2>&1 | tee "$RESULTS_DIR/bench_run${i}_${TS}.log"
 done
 
-# 3) Serializable verification
+# 3) Serializable verification (Isolation)
 TS=$(date +%Y%m%d_%H%M%S)
 echo "[$(date)] ==== Serializable verification ===="
 ./verify-serializable.sh 2>&1 | tee "$RESULTS_DIR/serializable_${TS}.log"
 
-# 4) Chaos test
+# 4) ACID verification (Atomicity + Consistency + Durability)
+TS=$(date +%Y%m%d_%H%M%S)
+echo "[$(date)] ==== ACID verification ===="
+./verify-acid.sh 2>&1 | tee "$RESULTS_DIR/acid_${TS}.log"
+
+# 5) Chaos test
 TS=$(date +%Y%m%d_%H%M%S)
 echo "[$(date)] ==== Chaos test ===="
 ./chaos-kill.sh 2>&1 | tee "$RESULTS_DIR/chaos_${TS}.log"
